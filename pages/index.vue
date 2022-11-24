@@ -34,9 +34,9 @@ export default {
   },
   async created() {
     try {
-      this.products = await this.$axios
-        .get('/api/products')
-        .then((res) => res.data.products)
+      const productResponse = await this.$axios.get('/api/products')
+
+      this.products = productResponse.data.products
     } catch (err) {
       this.errorMessage = 'Problemas ao carregar a lista!'
     }
