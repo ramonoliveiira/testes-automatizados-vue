@@ -42,7 +42,23 @@ describe('ProductList - integration', () => {
     expect(axios.get).toHaveBeenCalledWith('/api/products')
   })
 
-  fit('should mount the ProductCard component 10 times', async () => {
+  it('should display the error message when Promise rejects', async () => {
+    axios.get.mockReturnValue(
+      Promise.reject(new Error("Wasn't possible get products"))
+    )
+
+    const wrapper = mount(ProductList, {
+      mocks: {
+        $axios: axios,
+      },
+    })
+
+    await Vue.nextTick()
+
+    expect(wrapper.text()).toContain('Problemas ao carregar a lista!')
+  })
+
+  it('should mount the ProductCard component 10 times', async () => {
     const products = server.createList('product', 10)
 
     axios.get.mockReturnValue(Promise.resolve({ data: { products } }))
@@ -58,4 +74,71 @@ describe('ProductList - integration', () => {
     const cards = wrapper.findAllComponents(ProductCard)
     expect(cards).toHaveLength(10)
   })
+
+  it('should filter the product list when a search is performed', async () => {
+    // Arrange
+    const products = [
+      ...server.createList('product', 10),
+      server.create('product', {
+        title: 'Meu relógio amado',
+      }),
+      server.create('product', {
+        title: 'Meu outro relógio estimado',
+      }),
+    ]
+
+    axios.get.mockReturnValue(Promise.resolve({ data: { products } }))
+
+    const wrapper = mount(ProductList, {
+      mocks: {
+        $axios: axios,
+      },
+    })
+
+    await Vue.nextTick()
+
+    // Act
+    const search = wrapper.findComponent(Search)
+    search.find('input[type="search"]').setValue('relógio')
+    await search.find('form').trigger('submit')
+
+    // Assert
+    const cards = wrapper.findAllComponents(ProductCard)
+    expect(wrapper.vm.searchTerm).toEqual('relógio')
+    expect(cards).toHaveLength(2)
+  })
+
+  it('should filter the product list when a search is performed with term empty', async () => {
+    // Arrange
+    const products = [
+      ...server.createList('product', 10),
+      server.create('product', {
+        title: 'Meu relógio amado',
+      }),
+    ]
+
+    axios.get.mockReturnValue(Promise.resolve({ data: { products } }))
+
+    const wrapper = mount(ProductList, {
+      mocks: {
+        $axios: axios,
+      },
+    })
+
+    await Vue.nextTick()
+
+    // Act
+    const search = wrapper.findComponent(Search)
+    search.find('input[type="search"]').setValue('relógio')
+    await search.find('form').trigger('submit')
+    search.find('input[type="search"]').setValue('')
+    await search.find('form').trigger('submit')
+
+    // Assert
+    const cards = wrapper.findAllComponents(ProductCard)
+    expect(wrapper.vm.searchTerm).toEqual('')
+    expect(cards).toHaveLength(11)
+  })
 })
+
+// AAA
