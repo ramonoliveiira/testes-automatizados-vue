@@ -10,9 +10,9 @@
         <h3 class="text-sm text-gray-600">{{ product.title }}</h3>
         <div class="flex items-center mt-2">
           <button
-            data-testid="+"
+            data-testid="-"
             class="text-gray-500 focus:outline-none focus:text-gray-600"
-            @click="quantity++"
+            @click="decrease"
           >
             <svg
               class="h-5 w-5"
@@ -30,9 +30,9 @@
             quantity
           }}</span>
           <button
-            data-testid="-"
+            data-testid="+"
             class="text-gray-500 focus:outline-none focus:text-gray-600"
-            @click="decrease"
+            @click="quantity++"
           >
             <svg
               class="h-5 w-5"
