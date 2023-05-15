@@ -83,9 +83,9 @@ describe('CartItem', () => {
     expect(quantity.text()).toContain('0')
   })
 
-  it('should display a button to remover item from  cart', () => {
+  it('should display a button to remove item from cart', () => {
     const { wrapper } = mountCardItem(server)
-    const button = wrapper.find('[data-testid="remove-button"')
+    const button = wrapper.find('[data-testid="remove-button"]')
 
     expect(button.exists()).toBe(true)
   })
