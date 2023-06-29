@@ -10,11 +10,13 @@
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:js && yarn lint:prettier",
+    "cypress:open": "cypress open",
     "lintfix": "prettier --write --list-different . && yarn lint:js --fix",
     "prepare": "husky install",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:e2e": "start-server-and-test dev 3000 cypress:open"
   },
   "lint-staged": {
     "*.{js,vue}": "eslint --cache",
@@ -54,6 +56,7 @@
     "miragejs": "^0.1.45",
     "postcss": "^8.4.4",
     "prettier": "^2.5.1",
+    "start-server-and-test": "^2.0.0",
     "vue-eslint-parser": "^8.3.0",
     "vue-jest": "^3.0.4"
   }
